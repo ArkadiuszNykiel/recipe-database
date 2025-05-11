@@ -6,30 +6,28 @@ function RecipeLinks() {
   const [links, setLinks] = useState([]);
   const [newLink, setNewLink] = useState('');
 
-  // Fetch links from Firebase Firestore
+  // Fetch existing links from Firestore
   useEffect(() => {
     async function fetchLinks() {
-      const snapshot = await getDocs(collection(db, 'recipeLinks'));
+      const snapshot = await getDocs(collection(db, 'externalLinks'));
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setLinks(data);
     }
     fetchLinks();
   }, []);
 
-  // Handle adding a new link
+  // Handle adding a new external recipe link
   const handleAddLink = async (e) => {
     e.preventDefault();
     if (!newLink) {
-      alert('Proszę podać link do przepisu!');
+      alert('Proszę podać link!');
       return;
     }
 
     try {
-      await addDoc(collection(db, 'recipeLinks'), {
-        url: newLink
-      });
+      await addDoc(collection(db, 'externalLinks'), { url: newLink });
       setNewLink('');
-      alert('Link do przepisu dodany!');
+      alert('Link do strony z przepisem dodany!');
     } catch (error) {
       console.error('Błąd przy dodawaniu linku:', error);
     }
@@ -40,13 +38,13 @@ function RecipeLinks() {
       <h2>Linki do innych stron z przepisami</h2>
       <form onSubmit={handleAddLink}>
         <div className="mb-3">
-          <label className="form-label">Dodaj nowy link do przepisu</label>
+          <label className="form-label">Dodaj nowy link</label>
           <input
-            type="text"
+            type="url"
             className="form-control"
             value={newLink}
             onChange={(e) => setNewLink(e.target.value)}
-            placeholder="Wprowadź link do przepisu"
+            placeholder="Wprowadź URL strony z przepisem"
           />
         </div>
         <button type="submit" className="btn btn-primary">
