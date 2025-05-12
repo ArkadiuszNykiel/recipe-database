@@ -25,7 +25,7 @@ function SingleRecipe() {
   }
 
   return (
-    <div className="container mt-3">
+    <div className="container content-with-padding mt-3">
       <div className="card">
         <img
           src={recipe.thumbnail}
